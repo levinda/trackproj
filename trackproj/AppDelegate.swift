@@ -11,28 +11,54 @@ import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    
+    var window: UIWindow?
 
 
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        
+        print("willFinishLaunchingWithOptions: NotRunning ->-> Inactive / Background")
         return true
     }
 
-    // MARK: UISceneSession Lifecycle
-
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        // Called when a new scene session is being created.
-        // Use this method to select a configuration to create the new scene with.
-        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Override point for customization after application launch.
+        
+        print("didFinishLaunchingWithOPtions: NotRunning -> Inactive / Background")
+        return true
     }
-
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-        // Called when the user discards a scene session.
-        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+    
+    
+    // -> Перешел из состояние слева в состояние справа, ->-> в процессе
+       
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        print("DidBecomeActive: Background / Inactive -> Active")
     }
-
+    
+    func applicationDidEnterBackground(_ application: UIApplication) {
+         print("didEnterBackground: Active -> Background")
+     }
+     
+    func applicationWillEnterForeground(_ application: UIApplication) {
+              print("WillEnterForeground: Background ->-> Active")
+       }
+    
+    func applicationWillResignActive(_ application: UIApplication) {
+        print("WillResignActive: Active ->-> Inactive / Background")
+    }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        print("willTerminate: Background  ->-> Terminated")
+    }
+    
+ 
+    func applicationDidFinishLaunching(_ application: UIApplication) {
+        print("didFinishLaunching: Background ->-> Terminated")
+    }
+        
+    
     // MARK: - Core Data stack
 
     lazy var persistentContainer: NSPersistentContainer = {
