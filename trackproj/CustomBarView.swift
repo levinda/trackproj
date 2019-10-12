@@ -8,14 +8,32 @@
 
 import UIKit
 
-class CustomBarView: UIView {
+class CustomBarView: UIVisualEffectView {
 
-    /*
+
+        
+    override init(effect: UIVisualEffect?) {
+        super.init(effect: effect)
+    }
+    
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        
+        isOpaque = false
+        effect = UIBlurEffect(style: .light)
+        backgroundColor = .clear
+        
+    
+    }
+    
+    
+    
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
     override func draw(_ rect: CGRect) {
         // Drawing code
     }
-    */
+    
 
 }

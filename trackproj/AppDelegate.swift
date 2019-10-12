@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    
+      
     // -> Перешел из состояние слева в состояние справа, ->-> в процессе
        
     
@@ -57,7 +57,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidFinishLaunching(_ application: UIApplication) {
         print("didFinishLaunching: Background ->-> Terminated")
     }
-        
     
     // MARK: - Core Data stack
 
