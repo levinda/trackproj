@@ -12,10 +12,14 @@ class NewsViewController: UIViewController {
     
     // MARK: Temporal Data
     
-    let images: [String] = ["amster.JPG","table.jpg","shipsun.jpg"]
-    let titles: [String] = ["New canal opening", "Mind teez invention. Literally.", "Offensive Russian navy campaign in the Atlantic "]
+	let images: [String] = ["amster.JPG","table.jpg","shipsun.jpg"]
+    let titles: [String] = [
+		"New canal opening",
+		"Mind teez invention. Literally.",
+		"Offensive Russian navy campaign in the Atlantic "
+	]
     
-    let categories: [String] = ["Main News", "Music", "Politics", "Crime", "Hot"]
+    let categories: [String] = ["Main News","Favorites", "Music", "Politics", "Crime", "Hot"]
     var currentSelectedCategory: (name: String, number: Int) = ("Main News", 0)
     
     // MARK: Outlets
@@ -38,7 +42,15 @@ class NewsViewController: UIViewController {
             pickerView = nil
         }
         else{
-            let picker = IndependentPickerView(frame: CGRect(x: 0, y: self.view.bounds.height * 2/3, width: view.bounds.width, height: view.bounds.height / 3  ))
+            let picker = IndependentPickerView(
+                frame: CGRect(
+                    x: 0, y: self.view.bounds.height * 2/3,
+                    width: view.bounds.width,
+                    height: view.bounds.height / 3
+                )
+            )
+			
+            
             picker.controller = self
             picker.pickerView.selectRow(currentSelectedCategory.number, inComponent: 0, animated: false)
             self.view.addSubview(picker)
@@ -112,6 +124,10 @@ extension NewsViewController: IndependentPickerController{
         
         categoryButton.setTitle(categories[row], for: .normal)
         currentSelectedCategory = (categories[row], row)
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 32
     }
     
 }

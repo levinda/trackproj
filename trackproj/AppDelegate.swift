@@ -57,6 +57,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidFinishLaunching(_ application: UIApplication) {
         print("didFinishLaunching: Background ->-> Terminated")
     }
+	
+	
+	
+	
     
     // MARK: - Core Data stack
 

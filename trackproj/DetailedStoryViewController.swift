@@ -18,6 +18,8 @@ class DetailedStoryViewController: UIViewController {
     @IBAction func dismissSyory(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
     }
+    
+    
     var mainImage: UIImage?
     
     
@@ -25,6 +27,7 @@ class DetailedStoryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         mainImageView.image = mainImage
         mainImageView.layer.cornerRadius = 20
         

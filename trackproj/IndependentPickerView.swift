@@ -51,8 +51,6 @@ class IndependentPickerView: UIVisualEffectView {
             
         }
         
-        
-
         let pickerView = UIPickerView(frame: self.bounds)
         self.pickerView = pickerView
         self.contentView.addSubview(pickerView)
