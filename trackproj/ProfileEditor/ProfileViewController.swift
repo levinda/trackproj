@@ -12,12 +12,21 @@ import Photos
 
 
 class ProfileViewController: UIViewController {
+
+	// Temporal Data
+	
+	let categories: [String] = ["Main", "Music", "Politics", "Crime", "Hot"]
+	var selectedIndexes = Set<IndexPath>()
 	
 	
-	let categories: [String] = ["Main News","Favorites", "Music", "Politics", "Crime", "Hot"]
+	//MARK: Properties
+	
+	var profile: Profile = Profile()
 	
 	
 	// MARK: Outlets
+	
+	
 	
 	
 	@IBOutlet weak var profileImageView: UIImageView!{
@@ -29,19 +38,24 @@ class ProfileViewController: UIViewController {
 	}
 	
 	
+	@IBOutlet weak var favCategoriesLabel: UILabel!
+	
+	
 	@IBOutlet weak var nameTextField: UITextField!
 	
 	
 	
 	// MARK: Actions
-	
-	@IBAction func enteredName(_ sender: UITextField) {
-	}
-	
+		
 	
 	@IBAction func selectCategories(_ sender: UIButton) {
-		let catSelector = CategorySelectionView(frame: self.view.bounds)
+		
+		let catSelector = CategorySelectionView(frame: self.view.bounds.divided(atDistance: 100, from: .minYEdge).remainder)
 		self.view.addSubview(catSelector)
+		
+		catSelector.selectedRows = selectedIndexes
+		catSelector.setDataSource(self)
+		catSelector.setDelegate(self)
 	}
 	
 	
@@ -61,23 +75,21 @@ class ProfileViewController: UIViewController {
 			}
 		}
 		
+		
 	
 	}
 	
 	
 	@IBAction func saveNSOperation(_ sender: UIButton) {
+			
+		let savingOperation = saveProfileToNSDefaultsOperation(profile: profile)
+			
+		let operationQueue = OperationQueue()
+			
+		operationQueue.addOperation(savingOperation)
+	
 		
-			guard let name = profileName else{
-				print("")
-				return
-			}
-			
-			let savingOperation = saveProfileToNSDefaultsOperation(name: name, categories: [], image: profileImage)
-			
-			let operationQueue = OperationQueue()
 		
-			operationQueue.addOperation(savingOperation)
-			
 	}
 	
 	
@@ -95,14 +107,31 @@ class ProfileViewController: UIViewController {
 	}
 	
 	
-	//MARK: Properties
 	
-	var profileName: String? = nil
-	var profileImage: UIImage? = nil
+	// Coversion Function
 	
-	var favCategories: [String] = []
+	func getCategoriesForIndexPaths(_ indexes: Set<IndexPath>) -> [Category]{
+		var retCategories = [Category]()
+		for index in indexes{
+			let category = Category(name: categories[index.row])
+			retCategories.append(category)
+		}
+		return retCategories
+	}
 	
-	var profile: Profile? = nil
+	func getIndexesForCategories(_ categories: [Category]) -> Set<IndexPath>{
+		
+		var indexSet = Set<IndexPath>()
+		for category in categories{
+			if let rowIndex = self.categories.firstIndex(of: category.name){
+				indexSet.insert(IndexPath(row: rowIndex, section: 0))
+			}
+		}
+		
+		return indexSet
+	}
+	
+
 	
 	
     override func viewDidLoad() {
@@ -114,55 +143,61 @@ class ProfileViewController: UIViewController {
 		// Look adjustment:
 		profileImageView.layer.cornerRadius = 20
 		
-		extractProfileFromDefaults()
+		profile = extractProfileFromDefaults()
+		
+		updateUIFromModel()
 	
 	}
 	
 	
-	func extractProfileFromDefaults(){
+	func updateUIFromModel(){
+		
+		profileImageView.image = profile.profileImage
+		nameTextField.text = profile.name
+		favCategoriesLabel.text = "Favorite categories: \(selectedIndexes.count) selected"
+	}
+	
+	
+	func extractProfileFromDefaults() -> Profile{
 		
 		let defaults: UserDefaults = UserDefaults()
 		
-		let imageData = defaults.data(forKey: "profileImage")
-	
-		var image: UIImage? = nil
-		
-		if let data = imageData{
-			image = UIImage(data: data)
-		}
-		
-		profileImageView.image = image
-		profileImage = image
+		let constructedProfile = Profile()
 		
 		let name = defaults.string(forKey: "profileName")
-		nameTextField.text = name
-		self.profileName = name
+		
+		constructedProfile.name = name
 	
+		// Getting image
+		if let data = defaults.data(forKey: "profileImage"){
+			if let image = UIImage(data: data){
+				constructedProfile.profileImage = image
+			}
+		}
+		
+		if let loadedCategoriesNames = defaults.stringArray(forKey: "favCategories"){
+			let loadedCategories = loadedCategoriesNames.map {return Category(name: $0)}
+			constructedProfile.favCategories = loadedCategories
+			self.selectedIndexes = getIndexesForCategories(loadedCategories)
+		}
 		
 		
-		
-//		var profile: Profile! = nil
-//		if let realName = name{
-//			profile = Profile(name: realName)
-//			profile.profileImage = image
-//
-//			// TODO: Categories
-//			profile.favCategories = []
-//		}
-//
-		
+		return constructedProfile
 		
 	}
 	
 	
 	func saveProfileToDefaults(){
-		
+	
 		let defaults: UserDefaults = UserDefaults()
-		
-		defaults.set(profileImage?.pngData(), forKey: "profileImage")
-		defaults.set(profileName, forKey: "profileName")
-		
+			
+		defaults.set(profile.name, forKey: "profileName")
+		if let profileImage = profile.profileImage{
+			defaults.set(profileImage.pngData(), forKey: "profileImage")
+		}
+		defaults.set(profile.favCategories?.map{ return $0.name}, forKey: "favCategories")
 	}
+	
 	
 	
 	func getRectForIndicator() -> CGRect{
@@ -170,9 +205,7 @@ class ProfileViewController: UIViewController {
 		let x: CGFloat = self.view.bounds.midX - 20
 		return CGRect(x: x, y: y, width: 40, height: 40)
 	}
-	
-	
-	
+		
 	func checkPermission() {
         let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
         switch photoAuthorizationStatus {
@@ -205,7 +238,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 	@objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 		if let image = info[.originalImage] as? UIImage {
 			profileImageView.image = image
-			self.profileImage = image
+			self.profile.profileImage = image
 		}
 		
 		picker.dismiss(animated: true, completion: nil)
@@ -218,7 +251,7 @@ extension ProfileViewController: UITextFieldDelegate{
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		
 		textField.resignFirstResponder()
-		profileName = nameTextField.text
+		self.profile.name = textField.text
 		
 		
 		return true
@@ -226,3 +259,33 @@ extension ProfileViewController: UITextFieldDelegate{
 	
 }
 
+extension ProfileViewController: CategorySelectionViewDataSource{
+	
+	
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return categories.count
+	}
+	
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		if let categoryCell = tableView.dequeueReusableCell(withIdentifier: "categoryCell") as? CategoryTableViewCell{
+			categoryCell.categoryLabel.text = categories[indexPath.row]
+			categoryCell.tickImageView.isHidden = !selectedIndexes.contains(indexPath)
+			return categoryCell
+		}
+		return UITableViewCell()
+	}
+	
+}
+
+
+extension ProfileViewController: CategorySelectionViewDelegate{
+	
+	func categorySelectionView(_ view: CategorySelectionView, didFinishSelectingWithSelectedRows indexPaths: Set<IndexPath>){
+		selectedIndexes = indexPaths
+		
+		self.profile.favCategories = getCategoriesForIndexPaths(indexPaths)
+		updateUIFromModel()
+	}
+	
+	
+}

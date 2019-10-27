@@ -12,12 +12,8 @@ import UIKit
 
 class Profile{
 	
+	var name: String? = nil
 	var profileImage: UIImage? = nil
-	var favCategories = [String]()
-	var name: String
-	
-	init(name: String) {
-		self.name = name
-	}
+	var favCategories: [Category]? = nil
 	
 }

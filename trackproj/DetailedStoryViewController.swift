@@ -21,9 +21,10 @@ class DetailedStoryViewController: UIViewController {
     
     
     var mainImage: UIImage?
+	var mainText: String?
     
     
-    @IBOutlet weak var mainText: UITextView!
+    @IBOutlet weak var mainTextView: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,9 +32,11 @@ class DetailedStoryViewController: UIViewController {
         mainImageView.image = mainImage
         mainImageView.layer.cornerRadius = 20
         
-        let fixedWidth = mainText.frame.size.width
-        let newSize = mainText.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
-        mainText.frame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
+		
+		mainTextView.text = mainText
+        let fixedWidth = mainTextView.frame.size.width
+        let newSize = mainTextView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+        mainTextView.frame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
         
         // Do any additional setup after loading the view.
     }

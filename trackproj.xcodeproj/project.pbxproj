@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		8317EEA72350A8B500861359 /* IndependentPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8317EEA62350A8B500861359 /* IndependentPickerView.swift */; };
 		8317EEAB2351F6B500861359 /* roundedrect.png in Resources */ = {isa = PBXBuildFile; fileRef = 8317EEAA2351F6B500861359 /* roundedrect.png */; };
+		833D24362366003800A3A4E3 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D24352366003800A3A4E3 /* Article.swift */; };
+		833D24382366020400A3A4E3 /* NewsDownloadDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833D24372366020400A3A4E3 /* NewsDownloadDataTask.swift */; };
+		833DC70123645F2A008C7B9E /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833DC70023645F2A008C7B9E /* Category.swift */; };
 		8352411923590D7500BBD996 /* CustomRectButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8352411823590D7500BBD996 /* CustomRectButton.swift */; };
 		8352411B2359172A00BBD996 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8352411A2359172A00BBD996 /* ProfileViewController.swift */; };
 		83534E8F234CCA6A00584BC1 /* amster.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 83534E8E234CCA6A00584BC1 /* amster.JPG */; };
@@ -51,6 +54,9 @@
 /* Begin PBXFileReference section */
 		8317EEA62350A8B500861359 /* IndependentPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndependentPickerView.swift; sourceTree = "<group>"; };
 		8317EEAA2351F6B500861359 /* roundedrect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = roundedrect.png; sourceTree = "<group>"; };
+		833D24352366003800A3A4E3 /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
+		833D24372366020400A3A4E3 /* NewsDownloadDataTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsDownloadDataTask.swift; sourceTree = "<group>"; };
+		833DC70023645F2A008C7B9E /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		8352411823590D7500BBD996 /* CustomRectButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRectButton.swift; sourceTree = "<group>"; };
 		8352411A2359172A00BBD996 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		83534E8E234CCA6A00584BC1 /* amster.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = amster.JPG; sourceTree = "<group>"; };
@@ -102,6 +108,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		833D24342365FBA600A3A4E3 /* WebServices */ = {
+			isa = PBXGroup;
+			children = (
+				833D24352366003800A3A4E3 /* Article.swift */,
+				833D24372366020400A3A4E3 /* NewsDownloadDataTask.swift */,
+			);
+			path = WebServices;
+			sourceTree = "<group>";
+		};
+		833DC70323645F68008C7B9E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				83B77C72235C22DC00553D10 /* Profile.swift */,
+				833DC70023645F2A008C7B9E /* Category.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		833DC70423646013008C7B9E /* ProfileEditor */ = {
+			isa = PBXGroup;
+			children = (
+				8352411A2359172A00BBD996 /* ProfileViewController.swift */,
+				83B77C85235CDEDA00553D10 /* CategorySelectionView.swift */,
+				83B77C7F235CDCFD00553D10 /* CategoryTableViewCell.swift */,
+				83B77C80235CDCFD00553D10 /* CategoryTableViewCell.xib */,
+			);
+			path = ProfileEditor;
+			sourceTree = "<group>";
+		};
+		833DC70523646045008C7B9E /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				83B84C06233E9EAB00798E14 /* AppDelegate.swift */,
+				83B84C2D233F33B100798E14 /* LoggingViewController.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
 		83534E90234CCA7200584BC1 /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -148,20 +192,17 @@
 		83B84C05233E9EAB00798E14 /* trackproj */ = {
 			isa = PBXGroup;
 			children = (
-				83B84C06233E9EAB00798E14 /* AppDelegate.swift */,
-				83B84C2D233F33B100798E14 /* LoggingViewController.swift */,
+				833D24342365FBA600A3A4E3 /* WebServices */,
+				833DC70523646045008C7B9E /* Utility */,
+				833DC70423646013008C7B9E /* ProfileEditor */,
 				83B84C0A233E9EAB00798E14 /* NewsViewController.swift */,
 				83C235FB234BDF1100DAB954 /* NewsTableViewCell.swift */,
 				839E36CE234D3E6A0078CD08 /* DetailedStoryViewController.swift */,
 				8317EEA62350A8B500861359 /* IndependentPickerView.swift */,
-				8352411A2359172A00BBD996 /* ProfileViewController.swift */,
 				8386621E234E39530055ACC7 /* CustomBarView.swift */,
 				8352411823590D7500BBD996 /* CustomRectButton.swift */,
-				83B77C85235CDEDA00553D10 /* CategorySelectionView.swift */,
-				83B77C7F235CDCFD00553D10 /* CategoryTableViewCell.swift */,
-				83B77C80235CDCFD00553D10 /* CategoryTableViewCell.xib */,
 				83B77C78235C47B700553D10 /* Operations */,
-				83B77C72235C22DC00553D10 /* Profile.swift */,
+				833DC70323645F68008C7B9E /* Model */,
 				83B84C12233E9EAC00798E14 /* Assets.xcassets */,
 				83B84C0C233E9EAB00798E14 /* Main.storyboard */,
 				83B84C14233E9EAC00798E14 /* LaunchScreen.storyboard */,
@@ -293,6 +334,7 @@
 			files = (
 				83B84C0B233E9EAB00798E14 /* NewsViewController.swift in Sources */,
 				8386621F234E39530055ACC7 /* CustomBarView.swift in Sources */,
+				833D24362366003800A3A4E3 /* Article.swift in Sources */,
 				83B77C7C235CA8C300553D10 /* BasicUserDefaultsOperation.swift in Sources */,
 				8352411B2359172A00BBD996 /* ProfileViewController.swift in Sources */,
 				83B84C2E233F33B100798E14 /* LoggingViewController.swift in Sources */,
@@ -302,8 +344,10 @@
 				839E36CF234D3E6A0078CD08 /* DetailedStoryViewController.swift in Sources */,
 				8352411923590D7500BBD996 /* CustomRectButton.swift in Sources */,
 				83B84C07233E9EAB00798E14 /* AppDelegate.swift in Sources */,
+				833DC70123645F2A008C7B9E /* Category.swift in Sources */,
 				8317EEA72350A8B500861359 /* IndependentPickerView.swift in Sources */,
 				83B77C73235C22DC00553D10 /* Profile.swift in Sources */,
+				833D24382366020400A3A4E3 /* NewsDownloadDataTask.swift in Sources */,
 				83B77C7A235CA88B00553D10 /* saveNewsToUSerDefaultsOPeration.swift in Sources */,
 				83B84C11233E9EAB00798E14 /* trackproj.xcdatamodeld in Sources */,
 				83C235FC234BDF1100DAB954 /* NewsTableViewCell.swift in Sources */,

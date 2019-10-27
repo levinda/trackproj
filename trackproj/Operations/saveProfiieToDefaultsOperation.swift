@@ -14,16 +14,12 @@ class saveProfileToNSDefaultsOperation: BasicUserDefaultsOperation {
 	
 	
 	
-	let profileName: String
-	let profileImage: UIImage?
-	let favCategories: [String]
+	let profile: Profile
 	
 	
 	
-	init(name: String, categories: [String], image: UIImage? ) {
-		profileName = name
-		profileImage = image
-		favCategories = categories
+	init(profile: Profile ) {
+		self.profile = profile
 		super.init()
 		
 		
@@ -31,10 +27,16 @@ class saveProfileToNSDefaultsOperation: BasicUserDefaultsOperation {
 	
 	func saveProfileToDefaults(){
 		
-		defaults.set(profileImage?.pngData(), forKey: "profileImage")
-		defaults.set(profileName, forKey: "profileName")
+		let defaults: UserDefaults = UserDefaults()
+		
+		defaults.set(profile.name, forKey: "profileName")
+		if let profileImage = profile.profileImage{
+			defaults.set(profileImage.pngData(), forKey: "profileImage")
+			
+		}
 		
 	}
+		
 	
 	override func main(){
 		saveProfileToDefaults()
