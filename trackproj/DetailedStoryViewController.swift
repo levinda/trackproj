@@ -29,14 +29,16 @@ class DetailedStoryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        mainImageView.image = mainImage
-        mainImageView.layer.cornerRadius = 20
-        
+		
+		mainImageView.image = mainImage
+		mainImageView.layer.cornerRadius = 20
 		
 		mainTextView.text = mainText
         let fixedWidth = mainTextView.frame.size.width
         let newSize = mainTextView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
         mainTextView.frame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
+		
+		
         
         // Do any additional setup after loading the view.
     }

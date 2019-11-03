@@ -11,10 +11,10 @@ import Foundation
 struct newsApiData: Codable {
 	var articles: [Article]
 }
-struct Article: Codable, Equatable, Hashable{
+struct Article: Codable{
 	
 	var title: String
-	var url: String?
+	var url: String
 	var urlToImage: String?
 	var content: String?
 	
