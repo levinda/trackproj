@@ -18,6 +18,4 @@ struct Article: Codable{
 	var urlToImage: String?
 	var content: String?
 	
-	
-	
 }

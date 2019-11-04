@@ -26,14 +26,10 @@ class NewsTableViewCell: UITableViewCell {
         gradient.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
         gradient.locations = [0.6,1]
         newsImageView.layer.addSublayer(gradient)
-        
-        
         newsImageView.layer.cornerRadius = 20.0
         newsImageView.clipsToBounds = true
-        
-                
+		
     }
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -82,12 +82,16 @@ class ProfileViewController: UIViewController {
 	
 	@IBAction func saveNSOperation(_ sender: UIButton) {
 			
-		let savingOperation = saveProfileToNSDefaultsOperation(profile: profile)
+		let savingOperation = saveProfileToNSDefaultsOperation(profile: profile, completionHandler: nil)
+		
+		savingOperation.completionHandler = { [weak self] in
+			self?.dismiss(animated: true, completion: nil)
+		}
 			
 		let operationQueue = OperationQueue()
 			
 		operationQueue.addOperation(savingOperation)
-	
+		
 		
 		
 	}

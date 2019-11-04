@@ -15,7 +15,7 @@ class DetailedStoryViewController: UIViewController {
     
     
     
-    @IBAction func dismissSyory(_ sender: UIButton) {
+    @IBAction func dismissStory(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
     }
     

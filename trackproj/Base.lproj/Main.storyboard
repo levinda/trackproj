@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
@@ -28,20 +28,20 @@
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="mainNewsCell" id="T4x-11-Rcd" customClass="NewsTableViewCell" customModule="trackproj" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="88" width="414" height="312.5"/>
+                                        <rect key="frame" x="0.0" y="88" width="414" height="312.66665649414062"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="T4x-11-Rcd" id="UUt-lg-3fB">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="312.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="312.66665649414062"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="amster.JPG" translatesAutoresizingMaskIntoConstraints="NO" id="RcP-46-lid">
-                                                    <rect key="frame" x="20" y="16" width="374" height="280.5"/>
+                                                <imageView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="roundedrect.png" translatesAutoresizingMaskIntoConstraints="NO" id="RcP-46-lid">
+                                                    <rect key="frame" x="20" y="16" width="374" height="280.66666666666669"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="280" id="y1h-Qj-03Q"/>
+                                                        <constraint firstAttribute="height" constant="280.32999999999998" id="IJ8-Wa-qX3"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label with some words to get on 2 line" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="2vk-ov-UBT">
-                                                    <rect key="frame" x="35" y="212.5" width="349" height="74"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="––" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="2vk-ov-UBT">
+                                                    <rect key="frame" x="35" y="249.66666666666663" width="349" height="37"/>
                                                     <fontDescription key="fontDescription" name="GeezaPro" family="Geeza Pro" pointSize="30"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
@@ -64,14 +64,14 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="newsNoImageCell" textLabel="4kb-v5-Fta" style="IBUITableViewCellStyleDefault" id="WhE-JH-iI8">
-                                        <rect key="frame" x="0.0" y="400.5" width="414" height="72.5"/>
+                                        <rect key="frame" x="0.0" y="400.66665649414062" width="414" height="72.666664123535156"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="WhE-JH-iI8" id="O8L-Aw-9QM">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="72.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="72.666664123535156"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="4kb-v5-Fta">
-                                                    <rect key="frame" x="20" y="0.0" width="374" height="72.5"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="72.666664123535156"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                                     <nil key="textColor"/>
@@ -96,7 +96,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JBJ-q7-NiJ">
-                                            <rect key="frame" x="257.5" y="66" width="43" height="22"/>
+                                            <rect key="frame" x="257.66666666666669" y="66" width="43" height="22"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="43" id="AD4-nh-qM6"/>
                                                 <constraint firstAttribute="width" secondItem="JBJ-q7-NiJ" secondAttribute="height" multiplier="43:22" id="dNK-Ux-muM"/>
@@ -104,7 +104,7 @@
                                             <state key="normal" image="lines2.png"/>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bkG-Sf-Rll">
-                                            <rect key="frame" x="158.5" y="59" width="97" height="36"/>
+                                            <rect key="frame" x="158.66666666666666" y="59" width="97" height="36"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                             <state key="normal" title="Main News">
                                                 <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -185,13 +185,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Favorite categories: 0 selected" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2PT-Mf-ZFk">
-                                <rect key="frame" x="20" y="423" width="259.5" height="21.5"/>
+                                <rect key="frame" x="20" y="423" width="259.33333333333331" height="21.666666666666686"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dRa-1v-PGX" customClass="CustomRectButton" customModule="trackproj" customModuleProvider="target">
-                                <rect key="frame" x="20" y="452.5" width="374" height="33"/>
+                                <rect key="frame" x="20" y="452.66666666666669" width="374" height="33"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Select Categories">
                                     <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -209,7 +209,7 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="50" translatesAutoresizingMaskIntoConstraints="NO" id="tRd-da-wlR">
-                                <rect key="frame" x="20" y="525.5" width="374" height="33"/>
+                                <rect key="frame" x="20" y="525.66666666666663" width="374" height="33"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z2u-5g-dqZ" customClass="CustomRectButton" customModule="trackproj" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="162" height="33"/>
@@ -301,7 +301,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="aO8-t6-zXR">
-                                        <rect key="frame" x="20" y="350" width="374" height="804"/>
+                                        <rect key="frame" x="20" y="349.99999999999994" width="374" height="803.66666666666652"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                         <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -319,13 +319,13 @@
                                             <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="default"/>
                                         </state>
                                         <connections>
-                                            <action selector="dismissSyory:" destination="QTa-8P-9xV" eventType="touchUpInside" id="9oW-t8-FHC"/>
+                                            <action selector="dismissStory:" destination="QTa-8P-9xV" eventType="touchUpInside" id="9oW-t8-FHC"/>
                                         </connections>
                                     </button>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="E7f-uL-sbX">
                                         <rect key="frame" x="20" y="50" width="374" height="280"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="280" id="OvG-dD-iUa"/>
+                                            <constraint firstAttribute="width" secondItem="E7f-uL-sbX" secondAttribute="height" multiplier="187:140" id="GRs-PG-TNp"/>
                                         </constraints>
                                     </imageView>
                                 </subviews>
@@ -367,11 +367,11 @@
     </scenes>
     <resources>
         <image name="DownArrow.png" width="183" height="86"/>
-        <image name="amster.JPG" width="819.20001220703125" height="614.4000244140625"/>
         <image name="blackProfileIcon.png" width="128.16000366210938" height="124.31999969482422"/>
         <image name="lines2.png" width="1200" height="630"/>
+        <image name="roundedrect.png" width="982" height="794"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="yOm-qp-VoC"/>
+        <segue reference="Wim-u4-Dsx"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -17,6 +17,12 @@ class NewsViewController: UIViewController {
 	var articles: [Article] = []
 	var images: [String: UIImage] = [ : ]
     
+	
+	
+	// MARK: Properties
+	
+	var pickerViewTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(processTapGesture))
+	
     // MARK: Outlets
     
     @IBOutlet weak var categoryBar: CustomBarView!
@@ -32,9 +38,9 @@ class NewsViewController: UIViewController {
     
     
     @IBAction func categoryButtonPressed(_ sender: UIButton) {
-        if let picker = pickerView{
-            picker.removeFromSuperview()
-            pickerView = nil
+		
+		if pickerView != nil{
+            dismissPicker()
         }
         else{
             let picker = IndependentPickerView(
@@ -45,14 +51,38 @@ class NewsViewController: UIViewController {
                 )
             )
 			
-            
+			let pickerViewTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(processTapGesture))
+			self.view.addGestureRecognizer(pickerViewTapGestureRecognizer)
+			self.pickerViewTapGestureRecognizer = pickerViewTapGestureRecognizer
+	
             picker.controller = self
             picker.pickerView.selectRow(currentSelectedCategory.number, inComponent: 0, animated: false)
             self.view.addSubview(picker)
             pickerView = picker
         }
     }
+	
+	
+	@objc func processTapGesture(_ recognizer: UITapGestureRecognizer){
+		switch recognizer.state{
+		case .ended:
+			// Checking whether the touch is outside the Picker View
+			if !(pickerView?.point(inside: recognizer.location(in: pickerView), with: .none) ?? true){
+				dismissPicker()
+			}
+		default:
+			break
+		}
+	}
     
+	
+	func dismissPicker(){
+			pickerView!.removeFromSuperview()
+			pickerView = nil
+			self.view.removeGestureRecognizer(pickerViewTapGestureRecognizer)
+	}
+	
+	
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -87,9 +117,14 @@ class NewsViewController: UIViewController {
 		components.scheme = "https"
 		components.host = "newsapi.org"
 		components.path = "/v2/everything"
+		
+		
+		let date = Date()
+		DateFormatter().dateFormat = "yyyy-mm-dd"
 		components.queryItems = [
 			URLQueryItem(name: "q", value: category),
-			URLQueryItem(name: "from", value: "2019-10-03"),
+			URLQueryItem(name: "from", value: DateFormatter().string(from: date)),
+			URLQueryItem(name: "language", value: "en"),
 			URLQueryItem(name: "sortBy", value: "publishedAt"),
 			URLQueryItem(name: "apiKey", value: "e5ad458bf2844b628f5e593e7edd1e96")
 		]
@@ -104,6 +139,10 @@ class NewsViewController: UIViewController {
 					self.articles = articles
 					print(articles)
 					
+					DispatchQueue.main.async { [weak self] in
+						self?.tableView.reloadData()
+					}
+					
 					for (number, article) in articles.enumerated(){
 						if let imageUrl = article.urlToImage, let url = URL(string: imageUrl) {
 							let downloadTask = URLSession.shared.dataTask(with: url) { (imageData, resp, error) in
@@ -114,7 +153,6 @@ class NewsViewController: UIViewController {
 									}
 								}
 							}
-							
 							downloadTask.resume()
 						}
 					}
@@ -122,12 +160,6 @@ class NewsViewController: UIViewController {
 			}catch{
 				print(error)
 			}
-			
-			DispatchQueue.main.async { [weak self] in
-				self?.tableView.reloadData()
-			}
-			
-			
 		}
 		newTask.resume()
 	}
@@ -139,10 +171,17 @@ class NewsViewController: UIViewController {
 extension NewsViewController: UITableViewDataSource,UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return articles.count
+		return articles.count > 0 ? articles.count : 7
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		
+		guard articles.count > 0 else {
+			if let basicCell = tableView.dequeueReusableCell(withIdentifier: "mainNewsCell", for: indexPath) as? NewsTableViewCell{
+				return basicCell
+			}
+			return UITableViewCell()
+		}
 		let article = articles[indexPath.row]
 		if article.urlToImage != nil{
 			let cell = tableView.dequeueReusableCell(withIdentifier: "mainNewsCell", for: indexPath)
@@ -157,14 +196,13 @@ extension NewsViewController: UITableViewDataSource,UITableViewDelegate{
 			cell.textLabel?.text = article.title
 			return cell
 		}
-	
 		return UITableViewCell()
     }
     
 }
 
 
-extension NewsViewController: IndependentPickerController{
+extension NewsViewController: IndependentPickerViewController{
     
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {

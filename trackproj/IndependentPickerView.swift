@@ -9,20 +9,20 @@
 import UIKit
 
 
-protocol IndependentPickerController: UIPickerViewDelegate, UIPickerViewDataSource{
+protocol IndependentPickerViewController: UIPickerViewDelegate, UIPickerViewDataSource{
     
 }
 
 class IndependentPickerView: UIVisualEffectView {
     
     
-    var controller: IndependentPickerController? {
+    var controller: IndependentPickerViewController? {
         set{
             pickerView.dataSource = newValue
             pickerView.delegate = newValue
         }
         get{
-            return pickerView.dataSource as? IndependentPickerController
+            return pickerView.dataSource as? IndependentPickerViewController
         }
     }
     

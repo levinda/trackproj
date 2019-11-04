@@ -9,9 +9,8 @@
 import UIKit
 
 class CustomBarView: UIVisualEffectView {
-
-
-        
+	
+	
     override init(effect: UIVisualEffect?) {
         super.init(effect: effect)
     }
@@ -23,10 +22,7 @@ class CustomBarView: UIVisualEffectView {
         isOpaque = false
         effect = UIBlurEffect(style: .light)
         backgroundColor = .clear
-        
-    
     }
-    
     
     
     // Only override draw() if you perform custom drawing.
