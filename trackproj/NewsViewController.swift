@@ -12,7 +12,10 @@ class NewsViewController: UIViewController {
 	
 	// Fetched results controller
 	
+	
+	
 	lazy var frc: NSFetchedResultsController<NSFetchRequestResult> = constructFetcherForCategory(named: "Main")
+	
     
     // MARK: Temporal Data
 		
@@ -22,12 +25,25 @@ class NewsViewController: UIViewController {
 		didSet{
 			frc = constructFetcherForCategory(named: currentSelectedCategory.name)
 			
+			self.tableView.reloadData()
+			downloadNewsFor(category: currentSelectedCategory.name, page: 1)
+			
+			frc.delegate = self
+			try? frc.performFetch()
+			
 		}
 	}
 	
 	var articles: [ArticleAPI] = []
 	var images: [String: UIImage] = [ : ]
     
+	
+	
+	let formatter: DateFormatter = {
+		let formatter = DateFormatter()
+		formatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss"
+		return formatter
+	}()
 	
 	
 	
@@ -111,8 +127,11 @@ class NewsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-		downloadNewsFor(category: "Main", page: 1)
+		frc.delegate = self
+		// downloadNewsFor(category: "Main", page: 1)
 		
+		try? frc.performFetch()
+				
     }
     
     override func viewDidLayoutSubviews() {
@@ -126,11 +145,11 @@ class NewsViewController: UIViewController {
             if let newsCell = sender as? UITableViewCell, let index = tableView.indexPath(for: newsCell){
                 if let destinationVC = segue.destination as? DetailedStoryViewController{
 					
-					let article = articles[index.row]
-					destinationVC.mainText = article.content
-					destinationVC.mainImage = images[article.url] ?? UIImage(named: "roundedrect.png")
-					destinationVC.title = article.title
-					
+//
+//					destinationVC.mainText = article.content
+//					destinationVC.mainImage = images[article.url] ?? UIImage(named: "roundedrect.png")
+//					destinationVC.title = article.title
+//
 					
 				}
 			}
@@ -147,23 +166,19 @@ class NewsViewController: UIViewController {
 	
 	func downloadNewsFor(category: String, page: Int){
 		
+		
+		let latestNewsDateString = getLatestDateForNewsCategory(category: category)
+		
+	
 		var components = URLComponents()
 		components.scheme = "https"
 		components.host = "newsapi.org"
 		components.path = "/v2/everything"
 		
-		
-		let date = Date()
-		let formatter = DateFormatter()
-		formatter.dateFormat = "yyyy-MM"
-		
-		let formattedDate = formatter.string(from:date)
-		
-		print(formattedDate)
 		components.queryItems = [
 			URLQueryItem(name: "q", value: category),
-	//		URLQueryItem(name: "from", value: formattedDate),
 			URLQueryItem(name: "pageSize", value: "\(updateParameters.pageSize)"),
+			URLQueryItem(name: "from", value: latestNewsDateString ?? ""),
 			URLQueryItem(name: "language", value: "ru"),
 			URLQueryItem(name: "page", value:"\(page)"),
 			URLQueryItem(name: "sortBy", value: "publishedAt"),
@@ -179,16 +194,17 @@ class NewsViewController: UIViewController {
 					let articles = try JSONDecoder().decode(newsApiData.self, from: data).articles
 					
 					self.articles += articles
-					
 					DispatchQueue.main.async { [weak self] in
 						self?.tableView.reloadData()
 					}
 					
-					for (number, article) in articles.enumerated(){
+					for (_, article) in articles.enumerated(){
 						if let imageUrl = article.urlToImage, let url = URL(string: imageUrl) {
 							let downloadTask = URLSession.shared.dataTask(with: url) { (imageData, resp, error) in
-								if let data = imageData, let image = UIImage(data: data){
-									self.images[article.url] = image
+								if let data = imageData, let _ = UIImage(data: data){
+									DispatchQueue.main.async { [weak self] in
+										self?.saveApiArticleToCoreData(article: article, withImageData: data, andCategory: category)
+									}
 								}
 							}
 							downloadTask.resume()
@@ -205,8 +221,29 @@ class NewsViewController: UIViewController {
 	// MARK: Core Data
 	
 	
-	func saveApiArticlesToCoreData(aricles: [ArticleAPI]){
+	func saveApiArticleToCoreData(article: ArticleAPI, withImageData imageData: Data, andCategory category: String){
 		
+		
+		guard let delegate = UIApplication.shared.delegate as? AppDelegate else
+		{
+			return
+		}
+		if let articleTypeEntity = NSEntityDescription.entity(forEntityName: "Article", in: delegate.managedObjectContext){
+		
+			let modelArticle = Article(entity: articleTypeEntity, insertInto: delegate.managedObjectContext)
+			
+			modelArticle.title = article.title
+			modelArticle.content = article.content
+			modelArticle.publishedAt = convertToDate(stringDate: article.publishedAt)
+			modelArticle.source = article.url
+			
+			modelArticle.category = category
+			modelArticle.imageData = imageData
+			
+			delegate.saveContext()
+			
+						
+		}
 	}
 	
 	func constructFetcherForCategory(named category: String) -> NSFetchedResultsController<NSFetchRequestResult>{
@@ -214,15 +251,60 @@ class NewsViewController: UIViewController {
 		let delegate = UIApplication.shared.delegate as! AppDelegate
 		let newsFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Article")
 		newsFetchRequest.predicate = NSPredicate(format: "category == %@", category)
-		let sortDescriptor = NSSortDescriptor(key: "date", ascending: false)
+		let sortDescriptor = NSSortDescriptor(key: "publishedAt", ascending: false)
 		newsFetchRequest.sortDescriptors = [sortDescriptor]
-		newsFetchRequest.propertiesToFetch = ["title","publlishedAt","imageData", "content"]
+		newsFetchRequest.propertiesToFetch = ["title","publishedAt","imageData", "content"]
 		
 		let frc = NSFetchedResultsController(fetchRequest: newsFetchRequest,
 											 managedObjectContext: delegate.managedObjectContext,
 											 sectionNameKeyPath: nil,
 											 cacheName: nil)
 		return frc
+	}
+	
+	
+	func getLatestDateForNewsCategory(category: String) -> String? {
+		
+		let delegate = UIApplication.shared.delegate as! AppDelegate
+		let newsFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Article")
+		newsFetchRequest.predicate = NSPredicate(format: "category == %@", category)
+		newsFetchRequest.fetchLimit = 1
+		let sortDescriptor = NSSortDescriptor(key: "publishedAt", ascending: false)
+		newsFetchRequest.sortDescriptors = [sortDescriptor]
+		newsFetchRequest.propertiesToFetch = ["publishedAt"]
+		
+		let frc = NSFetchedResultsController(fetchRequest: newsFetchRequest,
+											 managedObjectContext: delegate.managedObjectContext,
+											 sectionNameKeyPath: nil,
+											 cacheName: nil)
+		
+		
+		do {
+			try frc.performFetch()
+			
+			if let result = frc.fetchedObjects?.first as? Article{
+				if let date = result.publishedAt{
+					return converToString(date: date)
+				}
+			}
+			
+		}catch{
+			print(error)
+		}
+		
+		return nil
+	}
+	
+	
+	// MARK: Utillities
+	
+	func convertToDate(stringDate: String) -> Date? {
+		let date = formatter.date(from: stringDate)
+		return date
+	}
+	
+	func converToString(date: Date) -> String{
+		return formatter.string(from: date)
 	}
 	
 }
@@ -247,30 +329,17 @@ extension NewsViewController: UITableViewDataSource,UITableViewDelegate{
     // Отрисовка ячейки
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		
-		guard articles.count > 0 else {
-			if let basicCell = tableView.dequeueReusableCell(withIdentifier: "mainNewsCell", for: indexPath) as? NewsTableViewCell{
-				return basicCell
-			}
+	
+		guard let cell = tableView.dequeueReusableCell(withIdentifier: "mainNewsCell") as? NewsTableViewCell,
+			  let article = frc.object(at: indexPath) as? Article else {
 			return UITableViewCell()
 		}
+		cell.titleLabel.text = article.title
+		cell.newsImageView.image = UIImage(data: article.imageData ?? Data()) ?? UIImage(named: "roundedrect.png")
 		
-		
-		let article = articles[indexPath.row]
-		let cell = tableView.dequeueReusableCell(withIdentifier: "mainNewsCell", for: indexPath)
-		if let newsCell = cell as? NewsTableViewCell {
-			newsCell.titleLabel.text = article.title
-			newsCell.newsImageView.image = images[article.url] ?? UIImage(named: "roundedrect.png")
-			newsCell.setNeedsDisplay()
-			return newsCell
-		}
-		
-		if let cell = tableView.dequeueReusableCell(withIdentifier: "newsNoImageCell"){
-			cell.textLabel?.text = article.title
-			return cell
-		}
-		return UITableViewCell()
-    }
+		return cell
+				
+	}
     
 }
 
@@ -311,6 +380,36 @@ extension NewsViewController: IndependentPickerViewController{
 // MARK: NSFetchedResultsControllerDelegate
 
 extension NewsViewController: NSFetchedResultsControllerDelegate{
+	
+	func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		tableView.beginUpdates()
+	}
+	
+	func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		tableView.endUpdates()
+	}
+	
+	func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+					didChange anObject: Any,
+					at indexPath: IndexPath?,
+					for type: NSFetchedResultsChangeType,
+					newIndexPath: IndexPath?) {
+		switch type
+		{
+		case .insert:
+			tableView.insertRows(at: [newIndexPath!], with: .automatic)
+		case .move:
+			tableView.deleteRows(at: [indexPath!], with: .automatic)
+			tableView.insertRows(at: [newIndexPath!], with: .automatic)
+		case .update:
+			tableView.reloadRows(at: [indexPath!], with: .automatic)
+		case .delete:
+			tableView.deleteRows(at: [indexPath!], with: .automatic)
+		default:
+			break
+		}
+		
+	}
 	
 	
 	

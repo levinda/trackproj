@@ -36,6 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         print("DidBecomeActive: Background / Inactive -> Active")
+		deleteAllRecords()
 		
     }
     
@@ -113,6 +114,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+	
 
 }
 
