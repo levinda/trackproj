@@ -1,5 +1,5 @@
 //
-//  NetworkManager.swift
+//  ImageDownloadService.swift
 //  trackproj
 //
 //  Created by Danil on 04/11/2019.
@@ -9,6 +9,11 @@
 import Foundation
 
 
-class NetworkManager{
+class LDImageDownloadService{
 	
+	var imageURL: URL
+	
+	init(imageURL: URL){
+		self.imageURL = imageURL
+	}	
 }

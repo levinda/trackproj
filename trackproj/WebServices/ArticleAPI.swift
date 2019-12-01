@@ -9,13 +9,15 @@
 import Foundation
 
 struct newsApiData: Codable {
-	var articles: [Article]
+	var articles: [ArticleAPI]
 }
-struct Article: Codable{
+
+struct ArticleAPI: Codable{
 	
 	var title: String
 	var url: String
-	var urlToImage: String?
+	var urlToImage: String? 
 	var content: String?
+	var publishedAt: String
 	
 }

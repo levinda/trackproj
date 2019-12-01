@@ -28,7 +28,7 @@ class CategorySelectionView: UIView {
 		effectedView.frame = self.bounds
 		self.addSubview(effectedView)
 		
-		let dismissButton = UIButton(frame: CGRect(x: bounds.midX - 15, y: 20, width: 30, height: 10))
+		let dismissButton = UIButton(frame: CGRect(x: bounds.midX - 15, y: 20, width: 40, height: 20))
 		dismissButton.setImage( UIImage(named: "DownArrow.png"), for: .normal)
 		dismissButton.addTarget(self, action: #selector(dismiss), for: .touchUpInside)
 		

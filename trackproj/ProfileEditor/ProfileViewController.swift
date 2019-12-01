@@ -15,7 +15,7 @@ class ProfileViewController: UIViewController {
 
 	// Temporal Data
 	
-	let categories: [String] = ["Main", "Music", "Politics", "Crime", "Hot"]
+	var categories: [String] = ["Main", "Music", "Politics", "Crime", "Hot"]
 	var selectedIndexes = Set<IndexPath>()
 	
 	
@@ -84,15 +84,21 @@ class ProfileViewController: UIViewController {
 			
 		let savingOperation = saveProfileToNSDefaultsOperation(profile: profile, completionHandler: nil)
 		
+		
+		let indicator = UIActivityIndicatorView(frame: getRectForIndicator())
+		indicator.startAnimating()
+		self.view.addSubview(indicator)
+		
 		savingOperation.completionHandler = { [weak self] in
+			indicator.stopAnimating()
+			indicator.removeFromSuperview()
 			self?.dismiss(animated: true, completion: nil)
+
 		}
 			
 		let operationQueue = OperationQueue()
 			
 		operationQueue.addOperation(savingOperation)
-		
-		
 		
 	}
 	
@@ -209,6 +215,8 @@ class ProfileViewController: UIViewController {
 		let x: CGFloat = self.view.bounds.midX - 20
 		return CGRect(x: x, y: y, width: 40, height: 40)
 	}
+	
+	
 		
 	func checkPermission() {
         let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()

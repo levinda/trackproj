@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
@@ -35,6 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         print("DidBecomeActive: Background / Inactive -> Active")
+		
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -63,6 +65,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	
     
     // MARK: - Core Data stack
+	
+	
+	var managedObjectContext: NSManagedObjectContext{
+		persistentContainer.viewContext
+	}
 
     lazy var persistentContainer: NSPersistentContainer = {
         /*
