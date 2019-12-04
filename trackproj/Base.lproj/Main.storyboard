@@ -16,19 +16,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="25" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="09U-9a-Bts">
-                                <rect key="frame" x="0.0" y="44" width="414" height="852"/>
+                            <tableView contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="25" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="09U-9a-Bts">
+                                <rect key="frame" x="0.0" y="97" width="414" height="799"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                <view key="tableHeaderView" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pv4-i2-mgt">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
-                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="60" id="ozw-gJ-nyU"/>
-                                    </constraints>
-                                </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="mainNewsCell" rowHeight="310" id="T4x-11-Rcd" customClass="NewsTableViewCell" customModule="trackproj" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="88" width="414" height="310"/>
+                                        <rect key="frame" x="0.0" y="28" width="414" height="310"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="T4x-11-Rcd" id="UUt-lg-3fB">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="310"/>
@@ -121,9 +114,9 @@
                             <constraint firstItem="09U-9a-Bts" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="8Ph-Jn-ofx"/>
                             <constraint firstItem="Oum-z8-xEP" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Tra-zd-6Mz"/>
                             <constraint firstItem="bkG-Sf-Rll" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="12" id="XDz-NN-3EX"/>
-                            <constraint firstItem="09U-9a-Bts" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="cqc-8z-QRC"/>
                             <constraint firstItem="09U-9a-Bts" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="nrn-P6-Cgh"/>
                             <constraint firstItem="09U-9a-Bts" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="osD-Pu-4KC"/>
+                            <constraint firstItem="09U-9a-Bts" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="53" id="rd6-48-rEd"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="Oum-z8-xEP" secondAttribute="top" constant="47" id="ym5-Q8-y9A"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Oum-z8-xEP" secondAttribute="trailing" id="zix-4B-wFx"/>
                         </constraints>
@@ -138,7 +131,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2113.0434782608695" y="132.58928571428572"/>
+            <point key="canvasLocation" x="2111.594202898551" y="132.58928571428572"/>
         </scene>
         <!--Profile View Controller-->
         <scene sceneID="UhQ-CX-D6k">
@@ -299,7 +292,7 @@
                                             <action selector="dismissStory:" destination="QTa-8P-9xV" eventType="touchUpInside" id="9oW-t8-FHC"/>
                                         </connections>
                                     </button>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="E7f-uL-sbX">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="E7f-uL-sbX">
                                         <rect key="frame" x="20" y="50" width="374" height="280"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="280" id="JVY-gZ-pGl"/>

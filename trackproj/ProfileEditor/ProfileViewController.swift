@@ -65,18 +65,19 @@ class ProfileViewController: UIViewController {
 		
 		let indicator = UIActivityIndicatorView(frame: getRectForIndicator())
 		indicator.startAnimating()
+		
 		self.view.addSubview(indicator)
 		
-		queue.async {
+		queue.async { [weak self] in
+			guard let self = self else { return }
 			self.saveProfileToDefaults()
+			
+			// TODO: Get rid off
 			DispatchQueue.main.async {
 				indicator.stopAnimating()
 				self.dismiss(animated: true, completion: nil)
 			}
 		}
-		
-		
-	
 	}
 	
 	
@@ -97,6 +98,7 @@ class ProfileViewController: UIViewController {
 		}
 			
 		let operationQueue = OperationQueue()
+		operationQueue.qualityOfService = .userInitiated
 			
 		operationQueue.addOperation(savingOperation)
 		
@@ -177,7 +179,7 @@ class ProfileViewController: UIViewController {
 		let name = defaults.string(forKey: "profileName")
 		
 		constructedProfile.name = name
-	
+		
 		// Getting image
 		if let data = defaults.data(forKey: "profileImage"){
 			if let image = UIImage(data: data){
@@ -206,6 +208,8 @@ class ProfileViewController: UIViewController {
 			defaults.set(profileImage.pngData(), forKey: "profileImage")
 		}
 		defaults.set(profile.favCategories?.map{ return $0.name}, forKey: "favCategories")
+		
+		defaults.synchronize()
 	}
 	
 	

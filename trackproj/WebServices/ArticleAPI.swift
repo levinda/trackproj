@@ -19,5 +19,6 @@ struct ArticleAPI: Codable{
 	var urlToImage: String? 
 	var content: String?
 	var publishedAt: String
+	var description: String?
 	
 }

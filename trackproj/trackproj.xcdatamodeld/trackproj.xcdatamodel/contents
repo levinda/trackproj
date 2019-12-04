@@ -9,6 +9,6 @@
         <attribute name="title" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Article" positionX="-54" positionY="0" width="128" height="133"/>
+        <element name="Article" positionX="-54" positionY="-9" width="128" height="133"/>
     </elements>
 </model>

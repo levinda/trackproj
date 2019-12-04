@@ -10,6 +10,9 @@ import UIKit
 import CoreData
 
 
+let themeManager = ThemeManager()
+
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
@@ -36,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         print("DidBecomeActive: Background / Inactive -> Active")
-		deleteAllRecords()
+		
 		
     }
     
@@ -114,6 +117,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+	
+	func deleteAllArticles(){
+		
+		let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Article")
+
+		// Create Batch Delete Request
+		let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+
+		do {
+			try managedObjectContext.execute(batchDeleteRequest)
+
+		} catch {
+			// Error Handling
+		}
+	}
 	
 
 }

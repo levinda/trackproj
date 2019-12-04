@@ -8,40 +8,36 @@
 import UIKit
 import CoreData
 
+
 class NewsViewController: UIViewController {
+	
+	// TODO: Limit fetchBatchSize, entity
 	
 	// Fetched results controller
 	
-	
-	
 	lazy var frc: NSFetchedResultsController<NSFetchRequestResult> = constructFetcherForCategory(named: "Main")
 	
-    
-    // MARK: Temporal Data
-		
-    let categories: [String] = ["Main", "Music", "Politics", "Space", "Cinema"]
+	// MARK: Temporal Data
+	
+	let categories: [String] = ["Main", "Music", "Politics", "Space", "Cinema"]
 	
 	var currentSelectedCategory: (name: String, number: Int) = ("Main", 0){
 		didSet{
 			frc = constructFetcherForCategory(named: currentSelectedCategory.name)
+			try? frc.performFetch()
+			frc.delegate = self
 			
-			self.tableView.reloadData()
 			downloadNewsFor(category: currentSelectedCategory.name, page: 1)
 			
-			frc.delegate = self
-			try? frc.performFetch()
+			self.tableView.reloadData()
 			
 		}
 	}
 	
-	var articles: [ArticleAPI] = []
-	var images: [String: UIImage] = [ : ]
-    
-	
-	
 	let formatter: DateFormatter = {
 		let formatter = DateFormatter()
-		formatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss"
+		formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+		formatter.timeZone = TimeZone(secondsFromGMT: 0)
 		return formatter
 	}()
 	
@@ -51,33 +47,38 @@ class NewsViewController: UIViewController {
 	
 	var pickerViewTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(processTapGesture))
 	
-    // MARK: Outlets
-    
-    @IBOutlet weak var categoryBar: CustomBarView!
-    
-    @IBOutlet weak var categoryButton: UIButton!
-    
-    @IBOutlet weak var tableView: UITableView!
-    
-    var pickerView: IndependentPickerView?
-    
-    
-    //MARK: Actions
+	// MARK: Outlets
 	
-    
-    @IBAction func categoryButtonPressed(_ sender: UIButton) {
+	@IBOutlet weak var categoryBar: CustomBarView!
 	
+	@IBOutlet weak var categoryButton: UIButton!
+	
+	@IBOutlet weak var tableView: UITableView!
+	
+	var pickerView: IndependentPickerView?
+	
+	
+	//MARK: Actions
+	
+	
+	@IBAction func categoryButtonPressed(_ sender: UIButton) {
+		
 		if pickerView != nil{
-            dismissPicker()
-        }
-        else{
-            let picker = IndependentPickerView(
-                frame: CGRect(
-                    x: 0, y: self.view.bounds.height * 2/3,
-                    width: view.bounds.width,
-                    height: view.bounds.height / 3
-                )
-            )
+			dismissPicker()
+		}
+		else{
+			let picker = IndependentPickerView(
+				frame: CGRect(
+					x: 0, y: self.view.bounds.height,
+					width: view.bounds.width,
+					height: view.bounds.height / 3
+				)
+			)
+			
+			let bounds = self.view.bounds
+			UIView.animate(withDuration: 0.5) {
+				picker.frame = CGRect(x: 0, y: bounds.height * 2/3, width: bounds.width, height: bounds.height / 3)
+			}
 			
 			let pickerViewTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(processTapGesture))
 			self.view.addGestureRecognizer(pickerViewTapGestureRecognizer)
@@ -87,13 +88,13 @@ class NewsViewController: UIViewController {
 			let pickerViewPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(processPanGesture))
 			
 			picker.addGestureRecognizer(pickerViewPanGestureRecognizer)
-	
-            picker.controller = self
-            picker.pickerView.selectRow(currentSelectedCategory.number, inComponent: 0, animated: false)
-            self.view.addSubview(picker)
-            pickerView = picker
-        }
-    }
+			
+			picker.controller = self
+			picker.pickerView.selectRow(currentSelectedCategory.number, inComponent: 0, animated: false)
+			self.view.addSubview(picker)
+			pickerView = picker
+		}
+	}
 	
 	
 	@objc func processTapGesture(_ recognizer: UITapGestureRecognizer){
@@ -107,7 +108,7 @@ class NewsViewController: UIViewController {
 			break
 		}
 	}
-    
+	
 	
 	@objc func processPanGesture(_ recognizer: UIPanGestureRecognizer){
 		switch recognizer.state{
@@ -118,39 +119,54 @@ class NewsViewController: UIViewController {
 	}
 	
 	func dismissPicker(){
-			pickerView!.removeFromSuperview()
-			pickerView = nil
-			self.view.removeGestureRecognizer(pickerViewTapGestureRecognizer)
+		pickerView!.removeFromSuperview()
+		pickerView = nil
+		self.view.removeGestureRecognizer(pickerViewTapGestureRecognizer)
 	}
 	
 	
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		// Do any additional setup after loading the view.
 		frc.delegate = self
 		// downloadNewsFor(category: "Main", page: 1)
 		
 		try? frc.performFetch()
-				
-    }
-    
-    override func viewDidLayoutSubviews() {
-        tableView.setNeedsLayout()
-    }
-    
-    // MARK: Navigation
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showStory" {
-            if let newsCell = sender as? UITableViewCell, let index = tableView.indexPath(for: newsCell){
-                if let destinationVC = segue.destination as? DetailedStoryViewController{
+		
+		let refreshControl = UIRefreshControl()
+		refreshControl.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
+		
+		if #available(iOS 10.0, *) {
+			tableView.refreshControl = refreshControl
+		} else {
+			tableView.backgroundView = refreshControl
+		}
+		
+		NotificationCenter.default.addObserver(self, selector: #selector(interfaceStyleDidChange), name: NSNotification.Name(rawValue: "traitInterfaceStyleDidChange"), object: nil)
+
+		
+	}
+	
+	override func viewDidLayoutSubviews() {
+		tableView.setNeedsLayout()
+	}
+	
+	// MARK: Navigation
+	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if segue.identifier == "showStory"{
+			if let newsCell = sender as? NewsTableViewCell, let index = tableView.indexPath(for: newsCell), let newsSegue = segue as? showNewsSegue{
+				newsSegue.tableCell = newsCell
+				if let destinationVC = segue.destination as? DetailedStoryViewController{
 					
-//
-//					destinationVC.mainText = article.content
-//					destinationVC.mainImage = images[article.url] ?? UIImage(named: "roundedrect.png")
-//					destinationVC.title = article.title
-//
-					
+					if let article = frc.object(at: index) as? Article {
+						destinationVC.mainText = article.content
+						destinationVC.title = article.title
+						if let data = article.imageData{
+							destinationVC.mainImage = UIImage(data: data)
+						}
+					}
 				}
 			}
 		}
@@ -169,7 +185,7 @@ class NewsViewController: UIViewController {
 		
 		let latestNewsDateString = getLatestDateForNewsCategory(category: category)
 		
-	
+		
 		var components = URLComponents()
 		components.scheme = "https"
 		components.host = "newsapi.org"
@@ -193,7 +209,6 @@ class NewsViewController: UIViewController {
 				if let data = data{
 					let articles = try JSONDecoder().decode(newsApiData.self, from: data).articles
 					
-					self.articles += articles
 					DispatchQueue.main.async { [weak self] in
 						self?.tableView.reloadData()
 					}
@@ -218,22 +233,32 @@ class NewsViewController: UIViewController {
 		newTask.resume()
 	}
 	
+	@objc func refresh(_ refreshControl: UIRefreshControl) {
+		
+		downloadNewsFor(category: currentSelectedCategory.name, page: 1)
+		
+		refreshControl.endRefreshing()
+	}
+	
+	
+	
+	
 	// MARK: Core Data
 	
 	
 	func saveApiArticleToCoreData(article: ArticleAPI, withImageData imageData: Data, andCategory category: String){
-		
 		
 		guard let delegate = UIApplication.shared.delegate as? AppDelegate else
 		{
 			return
 		}
 		if let articleTypeEntity = NSEntityDescription.entity(forEntityName: "Article", in: delegate.managedObjectContext){
-		
+			
 			let modelArticle = Article(entity: articleTypeEntity, insertInto: delegate.managedObjectContext)
 			
 			modelArticle.title = article.title
 			modelArticle.content = article.content
+			print(article.publishedAt)
 			modelArticle.publishedAt = convertToDate(stringDate: article.publishedAt)
 			modelArticle.source = article.url
 			
@@ -241,8 +266,6 @@ class NewsViewController: UIViewController {
 			modelArticle.imageData = imageData
 			
 			delegate.saveContext()
-			
-						
 		}
 	}
 	
@@ -266,9 +289,11 @@ class NewsViewController: UIViewController {
 	func getLatestDateForNewsCategory(category: String) -> String? {
 		
 		let delegate = UIApplication.shared.delegate as! AppDelegate
+		
 		let newsFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Article")
 		newsFetchRequest.predicate = NSPredicate(format: "category == %@", category)
 		newsFetchRequest.fetchLimit = 1
+		
 		let sortDescriptor = NSSortDescriptor(key: "publishedAt", ascending: false)
 		newsFetchRequest.sortDescriptors = [sortDescriptor]
 		newsFetchRequest.propertiesToFetch = ["publishedAt"]
@@ -281,12 +306,17 @@ class NewsViewController: UIViewController {
 		
 		do {
 			try frc.performFetch()
-			
+		
+
 			if let result = frc.fetchedObjects?.first as? Article{
 				if let date = result.publishedAt{
-					return converToString(date: date)
+					let latestDatePlus1Sec = date.timeIntervalSince1970 + 1
+					let dateToReturn = Date(timeIntervalSince1970: latestDatePlus1Sec)
+					return converToString(date: dateToReturn)
 				}
 			}
+			
+			
 			
 		}catch{
 			print(error)
@@ -295,6 +325,12 @@ class NewsViewController: UIViewController {
 		return nil
 	}
 	
+	//MARK: Notifications Handlers
+	
+	@objc func interfaceStyleDidChange(){
+		
+	}
+		
 	
 	// MARK: Utillities
 	
@@ -306,75 +342,73 @@ class NewsViewController: UIViewController {
 	func converToString(date: Date) -> String{
 		return formatter.string(from: date)
 	}
-	
+
 }
 
 
-
+// MARK: NewsTableViewController
 extension NewsViewController: UITableViewDataSource,UITableViewDelegate{
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		guard let sections = frc.sections else {
 			return 0
 		}
 		let currentSection = sections[section]
+		print(currentSection.numberOfObjects)
 		return currentSection.numberOfObjects
-    }
+	}
+	
 	
 	
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 		return 310
 	}
-		
-    // Отрисовка ячейки
+	
+	// Отрисовка ячейки
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-	
+		
 		guard let cell = tableView.dequeueReusableCell(withIdentifier: "mainNewsCell") as? NewsTableViewCell,
-			  let article = frc.object(at: indexPath) as? Article else {
-			return UITableViewCell()
+			let article = frc.object(at: indexPath) as? Article else {
+				return UITableViewCell()
 		}
 		cell.titleLabel.text = article.title
 		cell.newsImageView.image = UIImage(data: article.imageData ?? Data()) ?? UIImage(named: "roundedrect.png")
 		
 		return cell
-				
+		
 	}
-    
+	
 }
 
 
 // MARK: IndependentPickerViewController
 extension NewsViewController: IndependentPickerViewController{
-    
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return categories.count
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return categories[row]
-    }
-    
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+	
+	
+	func numberOfComponents(in pickerView: UIPickerView) -> Int {
+		return 1
+	}
+	
+	func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+		return categories.count
+	}
+	
+	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+		return categories[row]
+	}
+	
+	
+	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 		
-		images = [:]
-		articles = []
-        categoryButton.setTitle(categories[row], for: .normal)
-        currentSelectedCategory = (categories[row], row)
-		downloadNewsFor(category: categories[row], page: 1)
-		
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-        return 32
-    }
-    
+		categoryButton.setTitle(categories[row], for: .normal)
+		currentSelectedCategory = (categories[row], row)
+	}
+	
+	func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+		return 32
+	}
+	
 }
 
 // MARK: NSFetchedResultsControllerDelegate
@@ -394,6 +428,7 @@ extension NewsViewController: NSFetchedResultsControllerDelegate{
 					at indexPath: IndexPath?,
 					for type: NSFetchedResultsChangeType,
 					newIndexPath: IndexPath?) {
+		tableView.beginUpdates()
 		switch type
 		{
 		case .insert:
@@ -408,17 +443,15 @@ extension NewsViewController: NSFetchedResultsControllerDelegate{
 		default:
 			break
 		}
-		
+		tableView.endUpdates()
 	}
-	
-	
-	
+
 }
 
 
 // Mark: Constants
 
-struct updateParameters{
-	static var pageSize: Int = 30
+private enum updateParameters{
+	static var pageSize: Int = 50
 }
 

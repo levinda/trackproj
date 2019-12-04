@@ -49,5 +49,9 @@ class NewsTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+	
+	override func prepareForReuse() {
+		newsImageView.image = UIImage(named: "roundedrect.png")
+	}
 
 }
